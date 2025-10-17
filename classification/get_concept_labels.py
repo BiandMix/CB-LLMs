@@ -107,9 +107,9 @@ if args.dataset == 'SetFit/sst2':
     if args.dataset == 'dbpedia_14':
         encoded_sim_val_dataset = encoded_sim_val_dataset.remove_columns(['title'])
     if args.dataset == 'Linhduongcute/SOF':
-        unique_labels = encoded_sim_train_dataset.unique('label')
+        unique_labels = encoded_sim_val_dataset.unique('label')
         label2id = {label: idx for idx, label in enumerate(sorted(unique_labels))}
-        encoded_sim_train_dataset = encoded_sim_train_dataset.map(lambda e: {"label": label2id[e["label"]]})
+        encoded_sim_val_dataset = encoded_sim_val_dataset.map(lambda e: {"label": label2id[e["label"]]})
     encoded_sim_val_dataset = encoded_sim_val_dataset[:len(encoded_sim_val_dataset)]
 
 encoded_c = tokenizer_sim(concept_set, padding=True, truncation=True, max_length=args.max_length)
@@ -189,3 +189,4 @@ np.save(prefix + "concept_labels_train.npy", train_similarity)
 if args.dataset == 'SetFit/sst2':
 
     np.save(prefix + "concept_labels_val.npy", val_similarity)
+
