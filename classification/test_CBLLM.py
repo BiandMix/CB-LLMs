@@ -67,9 +67,9 @@ if __name__ == "__main__":
     if dataset == 'dbpedia_14':
         encoded_test_dataset = encoded_test_dataset.remove_columns(['title'])
     if args.dataset == 'Linhduongcute/SOF':
-        unique_labels = encoded_sim_train_dataset.unique('label')
+        unique_labels = encoded_test_dataset.unique('label')
         label2id = {label: idx for idx, label in enumerate(sorted(unique_labels))}
-        encoded_sim_train_dataset = encoded_sim_train_dataset.map(lambda e: {"label": label2id[e["label"]]})
+        encoded_test_dataset = encoded_test_dataset.map(lambda e: {"label": label2id[e["label"]]})
     encoded_test_dataset = encoded_test_dataset[:len(encoded_test_dataset)]
 
     print("creating loader...")
@@ -153,3 +153,4 @@ if __name__ == "__main__":
     metric.add_batch(predictions=pred, references=encoded_test_dataset["label"])
 
     print(metric.compute())
+
