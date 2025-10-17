@@ -43,7 +43,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     acs = args.cbl_path.split("/")[0]
-    dataset = args.cbl_path.split("/")[1] if 'sst2' not in args.cbl_path.split("/")[1] else args.cbl_path.split("/")[1].replace('_', '/')
+    dataset = args.cbl_path.split("/")[1] if 'SOF' not in args.cbl_path.split("/")[1] else args.cbl_path.split("/")[1].replace('_', '/')
     backbone = args.cbl_path.split("/")[2]
     cbl_name = args.cbl_path.split("/")[-1]
     
@@ -65,6 +65,10 @@ if __name__ == "__main__":
         encoded_test_dataset = encoded_test_dataset.remove_columns(['label_text'])
     if dataset == 'dbpedia_14':
         encoded_test_dataset = encoded_test_dataset.remove_columns(['title'])
+    if args.dataset == 'Linhduongcute/SOF':
+        unique_labels = encoded_sim_train_dataset.unique('label')
+        label2id = {label: idx for idx, label in enumerate(sorted(unique_labels))}
+        encoded_sim_train_dataset = encoded_sim_train_dataset.map(lambda e: {"label": label2id[e["label"]]})
     encoded_test_dataset = encoded_test_dataset[:len(encoded_test_dataset)]
 
     print("creating loader...")
@@ -164,3 +168,4 @@ if __name__ == "__main__":
                 else:
                     f.write('\n')
             f.write('\n')
+
