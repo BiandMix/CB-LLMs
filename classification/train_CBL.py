@@ -99,6 +99,10 @@ if __name__ == "__main__":
         encoded_train_dataset = encoded_train_dataset.remove_columns(['label_text'])
     if args.dataset == 'dbpedia_14':
         encoded_train_dataset = encoded_train_dataset.remove_columns(['title'])
+    if args.dataset == 'Linhduongcute/SOF':
+        unique_labels = encoded_sim_train_dataset.unique('label')
+        label2id = {label: idx for idx, label in enumerate(sorted(unique_labels))}
+        encoded_sim_train_dataset = encoded_sim_train_dataset.map(lambda e: {"label": label2id[e["label"]]})
     encoded_train_dataset = encoded_train_dataset[:len(encoded_train_dataset)]
 
     if args.dataset == 'SetFit/sst2':
@@ -110,6 +114,10 @@ if __name__ == "__main__":
             encoded_val_dataset = encoded_val_dataset.remove_columns(['label_text'])
         if args.dataset == 'dbpedia_14':
             encoded_val_dataset = encoded_val_dataset.remove_columns(['title'])
+        if args.dataset == 'Linhduongcute/SOF':
+            unique_labels = encoded_sim_train_dataset.unique('label')
+            label2id = {label: idx for idx, label in enumerate(sorted(unique_labels))}
+            encoded_sim_train_dataset = encoded_sim_train_dataset.map(lambda e: {"label": label2id[e["label"]]})
         encoded_val_dataset = encoded_val_dataset[:len(encoded_val_dataset)]
 
 
@@ -283,4 +291,5 @@ if __name__ == "__main__":
                 torch.save(backbone_cbl.state_dict(), prefix + model_name + ".pt")
 
     end = time.time()
+
     print("time of training CBL:", (end - start) / 3600, "hours")
