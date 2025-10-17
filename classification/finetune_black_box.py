@@ -11,7 +11,7 @@ from utils import eos_pooling
 parser = argparse.ArgumentParser()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-parser.add_argument("--dataset", type=str, default="SetFit/sst2")
+parser.add_argument("--dataset", type=str, default="Linhduongcute/SOF")
 parser.add_argument("--backbone", type=str, default="roberta", help="roberta or gpt2")
 parser.add_argument("--batch_size", type=int, default=8)
 parser.add_argument('--tune_mlp_only', action=argparse.BooleanOptionalAction)
@@ -197,4 +197,5 @@ if __name__ == "__main__":
             if args.tune_mlp_only:
                 torch.save(mlp.state_dict(), prefix + "mlp_finetuned_" + d_name + ".pt")
             else:
+
                 torch.save(LM.state_dict(), prefix + "backbone_finetuned_" + d_name + ".pt")
