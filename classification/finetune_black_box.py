@@ -69,6 +69,7 @@ if __name__ == "__main__":
         encoded_train_dataset = encoded_train_dataset.remove_columns(['title'])
     if args.dataset == 'Linhduongcute/SOF':
         unique_labels = encoded_train_dataset.unique('label')
+        unique_labels = [l for l in unique_labels if l is not None and l != ""]
         label2id = {label: idx for idx, label in enumerate(sorted(unique_labels))}
         encoded_train_dataset = encoded_train_dataset.map(lambda e: {"label": label2id[e["label"]]})
     encoded_train_dataset = encoded_train_dataset[:len(encoded_train_dataset)]
@@ -84,6 +85,7 @@ if __name__ == "__main__":
             encoded_val_dataset = encoded_val_dataset.remove_columns(['title'])
         if args.dataset == 'Linhduongcute/SOF':
             unique_labels = encoded_val_dataset.unique('label')
+            unique_labels = [l for l in unique_labels if l is not None and l != ""]
             label2id = {label: idx for idx, label in enumerate(sorted(unique_labels))}
             encoded_val_dataset = encoded_val_dataset.map(lambda e: {"label": label2id[e["label"]]})    
         encoded_val_dataset = encoded_val_dataset[:len(encoded_val_dataset)]
@@ -207,5 +209,6 @@ if __name__ == "__main__":
             else:
 
                 torch.save(LM.state_dict(), prefix + "backbone_finetuned_" + d_name + ".pt")
+
 
 
