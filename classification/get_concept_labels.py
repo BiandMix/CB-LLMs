@@ -81,6 +81,44 @@ elif args.concept_text_sim_model == 'angle':
 else:
     raise Exception("concept-text sim model should be mpnet, simcse or angle")
 
+#fix
+def safe_tokenize(batch):
+    col = CFG.example_name[args.dataset]
+    texts = batch[col]
+
+    # đảm bảo mọi phần tử là str — convert nếu không phải
+    cleaned = []
+    for t in texts:
+        if isinstance(t, str):
+            cleaned.append(t)
+        elif isinstance(t, dict):
+            # nếu là dict, thử các khóa phổ biến
+            if "abstract_text" in t:
+                cleaned.append(str(t["abstract_text"]))
+            elif "text" in t:
+                cleaned.append(str(t["text"]))
+            elif "sentence" in t:
+                cleaned.append(str(t["sentence"]))
+            else:
+                # fallback: stringify toàn bộ dict
+                cleaned.append(str(t))
+        elif isinstance(t, (list, tuple)):
+            # nếu list (ví dụ list of tokens), join lại
+            cleaned.append(" ".join(map(str, t)))
+        elif t is None:
+            cleaned.append("")
+        else:
+            cleaned.append(str(t))
+
+    return tokenizer_sim(cleaned, padding=True, truncation=True, max_length=args.max_length)
+
+encoded_sim_train_dataset = train_dataset.map(
+    safe_tokenize,
+    batched=True,
+    batch_size=min(1024, len(train_dataset))  # không khuyến khích dùng batch_size=len(train_dataset)
+)
+
+#finish fix
 encoded_sim_train_dataset = train_dataset.map(
     lambda e: tokenizer_sim(e[CFG.example_name[args.dataset]], padding=True, truncation=True,
                             max_length=args.max_length), batched=True,
@@ -189,4 +227,5 @@ np.save(prefix + "concept_labels_train.npy", train_similarity)
 if args.dataset == 'SetFit/sst2':
 
     np.save(prefix + "concept_labels_val.npy", val_similarity)
+
 
