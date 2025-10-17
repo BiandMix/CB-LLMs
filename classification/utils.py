@@ -120,4 +120,10 @@ def dbpedia_labels(n):
         return 13
 
 def sof_labels(n):
+    if n < 21:
+        return 0
+    elif n >= 21 and n < 41:
+        return 1
+    else:
+        return 2
     
