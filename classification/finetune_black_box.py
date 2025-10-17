@@ -68,9 +68,9 @@ if __name__ == "__main__":
     if args.dataset == 'dbpedia_14':
         encoded_train_dataset = encoded_train_dataset.remove_columns(['title'])
     if args.dataset == 'Linhduongcute/SOF':
-        unique_labels = encoded_sim_train_dataset.unique('label')
+        unique_labels = encoded_train_dataset.unique('label')
         label2id = {label: idx for idx, label in enumerate(sorted(unique_labels))}
-        encoded_sim_train_dataset = encoded_sim_train_dataset.map(lambda e: {"label": label2id[e["label"]]})
+        encoded_train_dataset = encoded_train_dataset.map(lambda e: {"label": label2id[e["label"]]})
     encoded_train_dataset = encoded_train_dataset[:len(encoded_train_dataset)]
 
     if args.dataset == 'SetFit/sst2':
@@ -83,9 +83,9 @@ if __name__ == "__main__":
         if args.dataset == 'dbpedia_14':
             encoded_val_dataset = encoded_val_dataset.remove_columns(['title'])
         if args.dataset == 'Linhduongcute/SOF':
-            unique_labels = encoded_sim_train_dataset.unique('label')
+            unique_labels = encoded_val_dataset.unique('label')
             label2id = {label: idx for idx, label in enumerate(sorted(unique_labels))}
-            encoded_sim_train_dataset = encoded_sim_train_dataset.map(lambda e: {"label": label2id[e["label"]]})    
+            encoded_val_dataset = encoded_val_dataset.map(lambda e: {"label": label2id[e["label"]]})    
         encoded_val_dataset = encoded_val_dataset[:len(encoded_val_dataset)]
 
     print("creating loader...")
@@ -207,4 +207,5 @@ if __name__ == "__main__":
             else:
 
                 torch.save(LM.state_dict(), prefix + "backbone_finetuned_" + d_name + ".pt")
+
 
