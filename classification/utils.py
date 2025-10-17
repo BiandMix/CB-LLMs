@@ -63,7 +63,8 @@ def get_labels(n, d):
         return agnews_labels(n)
     if d == 'dbpedia_14':
         return dbpedia_labels(n)
-
+    if d == 'Linhduongcute/SOF':
+        return sof_labels(n)
     return None
 
 def sst2_labels(n):
@@ -117,3 +118,6 @@ def dbpedia_labels(n):
         return 12
     else:
         return 13
+
+def sof_labels(n):
+    
